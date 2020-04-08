@@ -8,7 +8,7 @@ class UrlManager(object):
         pass
 
     @staticmethod
-    def buildUrl( path ):
+    def buildUrl(path):
         return path
 
     @staticmethod
