@@ -92,7 +92,7 @@ def edit():
 @route_user.route('/reset-pwd', methods=['GET', 'POST'])
 def resetPwd():
     if request.method == 'GET':
-        return ops_render('user/reset_pwd.html', {'current': 'reset_pwd'})
+        return ops_render('user/reset_pwd.html', {'current': 'reset-pwd'})
 
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
