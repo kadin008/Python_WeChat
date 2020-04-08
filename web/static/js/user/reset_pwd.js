@@ -1,40 +1,37 @@
 ;
-var user_edit_ops = {
+var mod_pwd_ops = {
     init:function () {
         this.eventBind();
     },
     eventBind: function () {
-        $('.user_edit_wrap .save').click(function () {
+        $('#save').click(function () {
             var btn_target = $(this);
             if(btn_target.hasClass('disabled')){
                 common_ops.alert('正在处理中......')
                 return;
             }
 
-            var nickname_target = $('.user_edit_wrap input[name=nickname]');
-            var nickname = nickname_target.val();
+            var old_password = $('#old_password').val();
+            var new_password = $('#new_password').val();
 
-            var email_target = $('.user_edit_wrap input[name=email]');
-            var email = email_target.val();
-
-            if (!nickname || nickname.length < 2){
-                common_ops.tip('请输入昵称', nickname_target);
+            if (!old_password){
+                common_ops.alert('请输入原密码');
                 return false;
             }
 
-            if (!email || email.length < 2){
-                common_ops.tip('请输入邮箱', nickname_target);
+            if (!new_password || email.length < 8){
+                common_ops.alert('请输入不少于8位的新密码');
                 return false;
             }
 
             var data = {
-                nickname: nickname,
-                email: email
+                old_password: old_password,
+                new_password: new_password
             }
 
             btn_target.addClass('disabled');
             $.ajax({
-                url:common_ops.buildUrl('/user/edit'),
+                url:common_ops.buildUrl('/user/reset-pwd'),
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -56,7 +53,7 @@ var user_edit_ops = {
 };
 
 $(document).ready(function () {
-    user_edit_ops.init()
+    mod_pwd_ops.init()
 
 });
 
