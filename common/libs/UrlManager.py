@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-from application import app as ac
+import application
 
 
 class UrlManager(object):
@@ -13,7 +13,7 @@ class UrlManager(object):
 
     @staticmethod
     def buildStaticUrl(path):
-        release_version = ac.config.get('RELEASE_VERSION')
+        release_version = application.app.config.get('RELEASE_VERSION')
         ver = "%s" % (int(time.time())) if not release_version else release_version
         path = "/static" + path + "?ver=" + ver
         return UrlManager.buildUrl(path)
