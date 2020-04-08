@@ -51,6 +51,11 @@ def login():
         resp['msg'] = '用名或密码不正确！'
         return jsonify(resp)
 
+    if user_info.status != 1:
+        resp['code'] = -1
+        resp['msg'] = '账号不存在或该账号已关闭，请联系关联员'
+        return jsonify(resp)
+
     response = make_response(json.dumps(resp))
     response.set_cookie(
         app.config['AUTH_COOKIE_NAME'], '%s#%s' % (
