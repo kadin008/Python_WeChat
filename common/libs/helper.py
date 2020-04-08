@@ -7,7 +7,7 @@ IDE: PyCharm
 Introduction: 
 """
 from flask import g, render_template
-
+from datetime import datetime
 
 # 自定义分页类
 def iPagination(params):
@@ -63,5 +63,9 @@ def ops_render(template, context={}):
     return render_template(template, **context)
 
 
+# 获取当前时间
+def getCurrentDate(format="%Y-%m-%d %H:%M:%S"):
+    return datetime.now().strftime(format)
+    # return datetime.now()
 
 
