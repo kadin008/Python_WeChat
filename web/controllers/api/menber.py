@@ -6,8 +6,7 @@ Create time: 2020-04-09
 IDE: PyCharm
 Introduction: 
 """
-import requests,json
-from application import app, db
+from application import db
 from flask import request, jsonify
 from web.controllers.api import route_api
 from common.models.member.member import Member
@@ -20,7 +19,6 @@ from common.libs.member.MemberService import MemberService
 def login():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
-    app.logger.info(req)
     code = req['code'] if 'code' in req else None
     if not code or len(code) < 1:
         resp['code'] = -1
