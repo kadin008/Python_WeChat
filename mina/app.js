@@ -6,7 +6,8 @@ App({
         userInfo: null,
         version: "1.0",
         shopName: "Python3 + Flask 订餐全栈系统",
-        domain:"http://192.168.2.99:8090/api"
+        domain:"http://192.168.2.99:8090/api" //本地测试
+        // domain:"http://wx.aipic.net.cn:8090/api"
     },
     tip:function( params ){
         var that = this;
@@ -56,5 +57,33 @@ App({
         return {
             'content-type': 'application/x-www-form-urlencoded'
         }
+    },
+    buildUrl:function (path, params) {
+        var url = this.globalData.domain + path;
+        var _paramUrl = '';
+        if(params){
+            _paramUrl = Object.keys(params).map(function (k) {
+                return[encodeURIComponent(k), encodeURIComponent(params[k])].join('=');
+            }).join('&');
+
+            _paramUrl = '?' + _paramUrl
+        }
+
+        return url + _paramUrl
+    },
+    getCache:function (key) {
+        var value = undefined
+        try {
+            value = wx.getStorageSync(key);
+        } catch (e) {
+          // Do something when catch error
+        }
+        return value;
+    },
+    setCache:function (key, value) {
+        wx.setCache({
+            key:key,
+            value:value
+        })
     }
 });

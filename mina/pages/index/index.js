@@ -5,7 +5,8 @@ Page({
   data: {
     remind: '加载中',
     angle: 0,
-    userInfo: {}
+    userInfo: {},
+    regFlag: true
   },
   goToIndex:function(){
     wx.switchTab({
@@ -16,7 +17,7 @@ Page({
     wx.setNavigationBarTitle({
       title: app.globalData.shopName
     });
-    // this.login();
+    this.checkLogin();
   },
   onShow:function(){
 
@@ -39,8 +40,35 @@ Page({
       }
     });
   },
+  checkLogin: function(){
+    var that = this;
+    wx.login({
+      success:function (res) {
+        if(!res.code){
+          app.alert({'content':'授权失败，请重新授权'});
+          return;
+        }
+        wx.request({
+          url: app.buildUrl('/member/check-reg'),
+          header:app.getRequestHeader(),
+          method:'POST',
+          data:{ code: res.code },
+          success:function (res) {
+            if (res.data.code != 200){
+              that.setData({
+                regFlag: false
+              })
+              return;
+            }
+            app.setCache('token', res.data.data.token)
+            that.goToIndex();
+          }
+        });
+      }
+    });
+  },
   login:function (e) {
-    // app.console(e);
+    var that = this;
     if(!e.detail.userInfo){
       app.alert({'content':'授权失败，请重新授权'});
       return;
@@ -55,21 +83,21 @@ Page({
         }
         data['code'] = res.code;
         wx.request({
-          url:'http://192.168.2.99:8090/api/member/login',
+          url:app.buildUrl('/member/login'),
           header:app.getRequestHeader(),
           method:'POST',
           data:data,
           success:function (res) {
-
+            if (res.data.code != 200){
+              app.alert({'content': res.data.msg})
+              return;
+            }
+            app.setCache('token', res.data.data.token)
+            that.goToIndex();
           }
         });
       }
     });
-
-
-
   }
-
-
 
 });
