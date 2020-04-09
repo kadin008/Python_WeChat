@@ -13,6 +13,7 @@ from common.libs.helper import ops_render, iPagination, getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.libs.user.UserService import UserService
 from common.models.user import User
+from common.models.log.app_access_log import AppAccessLog
 
 
 route_account = Blueprint('account_page', __name__)
@@ -67,8 +68,9 @@ def info():
     if not info:
         return redirect(reback_url)
 
+    access_list = AppAccessLog.query.filter_by(uid=uid).order_by(AppAccessLog.id.desc()).limit(10).all()
     resp_data['info'] =info
-
+    resp_data['access_list'] = access_list
     return ops_render('account/info.html', resp_data)
 
 

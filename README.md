@@ -36,7 +36,9 @@
 # 提交
 *  git push -u origin master
 
-* 测试修改 
+##flask-sqlacodegen 生成models
+*  flask-sqlacodegen 'mysql://root:123456@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db' --outfile "common/models/model.py"  --flask
+*  flask-sqlacodegen "mysql://kadin208:A100s200@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db" --tables app_error_log --outfile "common/models/log/app_error_log.py"  --flask
 
 
 

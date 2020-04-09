@@ -9,6 +9,7 @@ Introduction:
 from application import app
 
 from web.interceptors.auth_inter import *
+from web.interceptors.error_inter import *
 
 from web.controllers.index import route_index
 from web.controllers.user.user import route_user
