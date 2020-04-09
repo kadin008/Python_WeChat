@@ -20,6 +20,7 @@ from common.libs.member.MemberService import MemberService
 def login():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
+    app.logger.info(req)
     code = req['code'] if 'code' in req else None
     if not code or len(code) < 1:
         resp['code'] = -1

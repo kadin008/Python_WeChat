@@ -81,9 +81,9 @@ App({
         return value;
     },
     setCache:function (key, value) {
-        wx.setCache({
+        wx.setStorage({
             key:key,
-            value:value
+            data:value
         })
     }
 });
