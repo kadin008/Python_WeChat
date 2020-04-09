@@ -18,7 +18,7 @@
           <text >走吧，订餐去</text>
         </view>
 
-        <button class="confirm-btn" open-type="getUserInfo" bindgetuserinfo="login" wx:if='{{ regFlag==false }}'>
+        <button class="confirm-btn" open-type="getUserInfo"  bindgetuserinfo="login" wx:if='{{ regFlag==false }}'>
             授权登录
         </button>
 
