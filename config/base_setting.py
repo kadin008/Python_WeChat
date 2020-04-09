@@ -12,7 +12,8 @@ SQLALCHEMY_ECHO = False
 AUTH_COOKIE_NAME = 'mooc_food'
 
 IGNORE_UERL = [
-    '^/user/login'
+    '^/user/login',
+    '^/api'
 ]
 IGNORE_CHECK_LOGIN_URLS = [
     '^/static',
@@ -25,5 +26,12 @@ STATUS_MAPPING = {
     '1': '正常',
     '0': '已删除'
 }
+
+
+MINA_APP = {
+    'appid': 'wx24caabd564709caa',
+    'appkey': '1420972ba3964031f59a646dd8b77eba'
+}
+
 
 

@@ -15,7 +15,8 @@ Page({
   onLoad:function(){
     wx.setNavigationBarTitle({
       title: app.globalData.shopName
-    })
+    });
+    // this.login();
   },
   onShow:function(){
 
@@ -37,5 +38,38 @@ Page({
         });
       }
     });
+  },
+  login:function (e) {
+    // app.console(e);
+    if(!e.detail.userInfo){
+      app.alert({'content':'授权失败，请重新授权'});
+      return;
+    }
+
+    var data = e.detail.userInfo;
+    wx.login({
+      success:function (res) {
+        if(!res.code){
+          app.alert({'content':'授权失败，请重新授权'});
+          return;
+        }
+        data['code'] = res.code;
+        wx.request({
+          url:'http://192.168.2.99:8090/api/member/login',
+          header:app.getRequestHeader(),
+          method:'POST',
+          data:data,
+          success:function (res) {
+
+          }
+        });
+      }
+    });
+
+
+
   }
+
+
+
 });
