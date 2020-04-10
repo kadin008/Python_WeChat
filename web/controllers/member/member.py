@@ -22,7 +22,7 @@ def index():
 
     req = request.values
     page = int(req['p']) if 'p' in req and req['p'] else 1
-    query = Member.query()
+    query = Member.query
 
     if 'mix_kw' in req:
         query = query.filter(Member.nickname.like('%{0}%'.format(req['mix_kw'])))
@@ -78,6 +78,9 @@ def set():
 
         info = Member.query.filter_by(id=id).furst()
         if not info:
+            return redirect(reback_url)
+
+        if info.status != 1:
             return redirect(reback_url)
 
         resp_data['info'] = info
