@@ -59,6 +59,6 @@ var food_cat_set_ops = {
 
     }
 };
-$(document).ready({
+$(document).ready(function (){
     food_cat_set_ops.init();
-})
+});

@@ -28,9 +28,7 @@
 			<div class="form-group">
 				<label class="col-lg-2 control-label">权重:</label>
 				<div class="col-lg-10">
-					<input type="text" name="weight" class="form-control" placeholder="请输入分类名称~~" value="{% if  info and info.weight > 0 %}
-					{{ info.weight }} {% else %} 1
-					{% endif %} ">
+					<input type="text" name="weight" class="form-control" placeholder="请输入分类名称~~" value="{% if  info and info.weight > 0 %} {{ info.weight }} {% else %}1{% endif %} ">
 				</div>
 			</div>
 			<div class="hr-line-dashed"></div>
