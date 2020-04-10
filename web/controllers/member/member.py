@@ -34,7 +34,7 @@ def index():
         'total': query.count(),
         'page_size': app.config['PAGE_SIZE'],
         'page': page,
-        'display': app.config['PAGE_DISPLAY']
+        'display': app.config['PAGE_DISPLAY'],
         'url': request.full_path.replace('&p={}'.format(page), '')
     }
 
