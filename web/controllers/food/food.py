@@ -36,7 +36,7 @@ def cat():
     query = FoodCat.query
 
     if 'status' in req and int(req['status']) > -1:
-        query = query.fulter(FoodCat.status == int(req['status']))
+        query = query.filter(FoodCat.status == int(req['status']))
 
     List = query.order_by(FoodCat.weight.desc(), FoodCat.id.desc()).all()
     resp_data['list'] = List
