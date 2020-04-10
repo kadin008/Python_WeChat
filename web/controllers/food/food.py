@@ -51,7 +51,7 @@ def catSet():
     if request.method == 'GET':
         resp_data = {}
         req = request.args
-        uid = int(req.get('id', 0))
+        id = int(req.get('id', 0))
         info = None
         if id:
             info = FoodCat.query.filter_by(id=id).first()
@@ -84,11 +84,11 @@ def catSet():
     model_food_cat.updated_time = getCurrentDate()
     db.session.add(model_food_cat)
     db.session.commit()
-    return jsonify( resp)
+    return jsonify(resp)
 
 
-@route_food.route('/car-ops', methods=['POST'])
-def catops():
+@route_food.route('/cat-ops', methods=['POST'])
+def catOps():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
 
