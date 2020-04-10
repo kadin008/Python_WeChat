@@ -35,7 +35,7 @@ def index():
         'page_size': app.config['PAGE_SIZE'],
         'page': page,
         'display': app.config['PAGE_DISPLAY']
-        'url': request.full_path.replace('&p={}'.format(page),'')
+        'url': request.full_path.replace('&p={}'.format(page), '')
     }
 
     pages = iPagination(page_params)
