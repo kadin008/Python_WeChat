@@ -10,7 +10,6 @@ import os
 from flask import Flask
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
-from common.libs.UrlManager import UrlManager
 
 
 class Application(Flask):
@@ -27,6 +26,8 @@ class Application(Flask):
 db = SQLAlchemy()
 app = Application(__name__, template_folder=os.getcwd()+'/web/templates/', root_path=os.getcwd())
 manager = Manager(app)
+
+from common.libs.UrlManager import UrlManager
 
 
 # 函数模板
