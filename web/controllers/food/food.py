@@ -76,7 +76,7 @@ def catSet():
         model_food_cat = food_cat_info
 
     else:
-        model_food_cat = FoodCat
+        model_food_cat = FoodCat()
         model_food_cat.created_time = getCurrentDate()
 
     model_food_cat.name = name
