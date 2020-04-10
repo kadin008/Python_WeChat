@@ -7,7 +7,8 @@
 * python manager.py runserver
 
 # linux/centos 启动方式
-* export ops_config=local | production && python manager.py runserver 
+* export ops_config=local | production && python manager.py runserver
+
 
 ## git 命令
 # 设置
@@ -38,7 +39,7 @@
 
 ##flask-sqlacodegen 生成models
 *  flask-sqlacodegen 'mysql://root:123456@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db' --outfile "common/models/model.py"  --flask
-*  flask-sqlacodegen "mysql://kadin208:A100s200@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db" --tables app_error_log --outfile "common/models/log/app_error_log.py"  --flask
+*  flask-sqlacodegen "mysql://kadin208:A100s200@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db" --tables member --outfile "common/models/member/member.py"  --flask
 
 
 

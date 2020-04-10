@@ -54,7 +54,7 @@ Page({
           method:'POST',
           data:{ code: res.code },
           success:function (res) {
-            if (res.data.code != 200){
+            if (res.data.code !== 200){
               that.setData({
                 regFlag: false
               })
@@ -88,7 +88,7 @@ Page({
           method:'POST',
           data:data,
           success:function (res) {
-            if (res.data.code != 200){
+            if (res.data.code !== 200){
               app.alert({'content': res.data.msg})
               return;
             }
