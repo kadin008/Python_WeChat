@@ -58,7 +58,7 @@ def info():
     reback_url = UrlManager.buildUrl('/member/index')
     if id < 1:
         return redirect(reback_url)
-    info = Member.query.filter_by(id=id).furst()
+    info = Member.query.filter_by(id=id).first()
     if not info:
         return redirect(reback_url)
     resp_data['info'] = info
@@ -76,7 +76,7 @@ def set():
         if id < 1:
             return redirect(reback_url)
 
-        info = Member.query.filter_by(id=id).furst()
+        info = Member.query.filter_by(id=id).first()
         if not info:
             return redirect(reback_url)
 
