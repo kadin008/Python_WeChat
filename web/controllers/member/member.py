@@ -96,7 +96,7 @@ def set():
         resp['msg'] = '昵称不能为空'
         return jsonify(req)
 
-    member_info = Member.query.filter_by(id=id).furst()
+    member_info = Member.query.filter_by(id=id).first()
     if not member_info:
         resp['code'] = -1
         resp['msg'] = '会员不存在，请核实后在操作'
