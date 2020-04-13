@@ -9,6 +9,7 @@ Introduction:
 from flask import g, render_template
 from datetime import datetime
 
+
 # 自定义分页类
 def iPagination(params):
     import math
@@ -67,5 +68,29 @@ def ops_render(template, context={}):
 def getCurrentDate(format="%Y-%m-%d %H:%M:%S"):
     return datetime.now().strftime(format)
     # return datetime.now()
+
+
+def getDicFilterField(db_model, select_filed, key_field, id_list):
+    ret = {}
+    query = db_model.query
+    if id_list and len(id_list) > 0:
+        query = query.filter(select_filed.in_(id_list))
+
+    List = query.all()
+    if not List:
+        return ret
+
+    for item in List:
+        if not hasattr(item, key_field):
+            break
+        if getattr(item, key_field) not in ret:
+            ret[getattr(item, key_field)] = []
+
+        ret[getattr(item, key_field)].append(item)
+    return ret
+
+
+
+
 
 
