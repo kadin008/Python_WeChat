@@ -163,6 +163,7 @@ def set():
     model_food.cat_id = cat_id
     model_food.name = name
     model_food.price = price
+    model_food.main_image = main_image
     model_food.summary = summary
     model_food.stock = stock
     model_food.tags = tags

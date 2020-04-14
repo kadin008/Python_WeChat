@@ -24,20 +24,20 @@ Page({
         });
 
         that.setData({
-            banners: [
-                {
-                    "id": 1,
-                    "pic_url": "/images/food.jpg"
-                },
-                {
-                    "id": 2,
-                    "pic_url": "/images/food.jpg"
-                },
-                {
-                    "id": 3,
-                    "pic_url": "/images/food.jpg"
-                }
-            ],
+            // banners: [
+            //     {
+            //         "id": 1,
+            //         "pic_url": "/images/food.jpg"
+            //     },
+            //     {
+            //         "id": 2,
+            //         "pic_url": "/images/food.jpg"
+            //     },
+            //     {
+            //         "id": 3,
+            //         "pic_url": "/images/food.jpg"
+            //     }
+            // ],
             categories: [
                 {id: 0, name: "全部"},
                 {id: 1, name: "川菜"},
@@ -77,6 +77,8 @@ Page({
 			 ],
             loadingMoreHidden: false
         });
+
+        this.getBannerAndCat();
     },
     scroll: function (e) {
         var that = this, scrollTop = that.data.scrollTop;
@@ -114,5 +116,57 @@ Page({
         wx.navigateTo({
             url: "/pages/food/info?id=" + e.currentTarget.dataset.id
         });
+    },
+    getBannerAndCat:function () {
+        var that = this;
+        wx.request({
+            url:app.buildUrl('/food/index'),
+            header:app.getRequestHeader(),
+            success(res) {
+                var resp = res.data;
+                if (resp.code != 200){
+                    app.alert({'content': resp.msg});
+                    return;
+                }
+                that.setData({
+                    banners:resp.data.banner_list,
+                    categories:resp.data.cat_list
+                });
+                that.getFoodList();
+            }
+
+        });
+    },
+    catClick: function(e){
+        this.setData({
+            activeCategoryId:e.currentTarget.id
+        });
+        this.getFoodList();
+    },
+    onReachBottom: function(){
+
+    },
+    getFoodList: function () {
+        var that = this;
+        wx.request({
+            url:app.buildUrl('/food/search'),
+            header:app.getRequestHeader(),
+            data:{
+                cat_id:that.data.activeCategoryId,
+                mix_kw:that.data.searchInput
+            },
+            success(res) {
+                var resp = res.data;
+                if (resp.code != 200){
+                    app.alert({'content': resp.msg});
+                    return;
+                }
+                var goods = resp.data.list;
+                that.setData({
+                    goods:goods
+                });
+            }
+        });
     }
+
 });

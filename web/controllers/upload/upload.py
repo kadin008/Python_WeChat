@@ -21,20 +21,20 @@ route_upload = Blueprint('upload_page', __name__)
 def upload():
     req = request.values
     action = req['action'] if 'action' in req else ''
-    if action == 'config':
+    if action == "config":
         root_path = app.root_path
-        config_path = '{0}/web/static/plugins/ueditor/ueditor.config.js'.format(root_path)
-        with open(config_path) as fp:
+        config_path = "{0}/web/static/plugins/ueditor/upload_config.json".format(root_path)
+        with open(config_path, encoding="utf-8") as fp:
             try:
                 config_data = json.loads(re.sub(r'\/\*.*\*/', '', fp.read()))
             except:
                 config_data = {}
         return jsonify(config_data)
 
-    if action == 'uploadimage':
+    if action == "uploadimage":
         return uploadImage()
 
-    if action == 'listimage':
+    if action == "listimage":
         return listImage()
 
     return 'upload'
@@ -51,7 +51,7 @@ def uploadPic():
     ret = UploadService.uploadByFile(upfile)
     if ret['code'] != 200:
         return "<script type='text/javascript'>{0}.error('{1}')</script>".format(callback_target, "上传失败" + ret['msg'])
-    return "<script type='text/javascript'>{0}.error('{1}')</script>".format(callback_target, ret['data']['file_key'])
+    return "<script type='text/javascript'>{0}.success('{1}')</script>".format(callback_target, ret['data']['file_key'])
 
 
 def uploadImage():

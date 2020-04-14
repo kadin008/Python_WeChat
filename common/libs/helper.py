@@ -6,6 +6,7 @@ Create time: 2020-04-07
 IDE: PyCharm
 Introduction: 
 """
+from application import app
 from flask import g, render_template
 from datetime import datetime
 
@@ -75,18 +76,13 @@ def getDicFilterField(db_model, select_filed, key_field, id_list):
     query = db_model.query
     if id_list and len(id_list) > 0:
         query = query.filter(select_filed.in_(id_list))
-
     List = query.all()
     if not List:
         return ret
-
     for item in List:
         if not hasattr(item, key_field):
             break
-        if getattr(item, key_field) not in ret:
-            ret[getattr(item, key_field)] = []
-
-        ret[getattr(item, key_field)].append(item)
+        ret[getattr(item, key_field)] = item
     return ret
 
 
