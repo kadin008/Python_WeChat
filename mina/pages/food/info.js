@@ -131,15 +131,11 @@ Page({
                 var resp = res.data;
                 if (resp.code != 200){
                     app.alert({'content': resp.msg});
-                    wx.navigateTo({
-                        url: '/pages/food/index'
-                    });
                     return;
                 }
                  that.setData({
                      info: resp.data.info,
                      buyNumMax: resp.data.info.stock,
-                     // shopCarNum:resp.data.cart_number
                 });
                 WxParse.wxParse('article', 'html', resp.data.info.summary, that, 5);
             }

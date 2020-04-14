@@ -108,7 +108,7 @@ def FoodInfo():
         'stock': food_info.stock,
         'price': str(food_info.price),
         'main_image': UrlManager.buildImageUrl(food_info.main_image),
-        'pics': UrlManager.buildImageUrl(food_info.main_image)
+        'pics': [UrlManager.buildImageUrl(food_info.main_image), UrlManager.buildImageUrl(food_info.main_image)]
     }
     return jsonify(resp)
 

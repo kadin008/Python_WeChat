@@ -11,7 +11,7 @@
         </swiper>
         <view class="dots">
             <block wx:for="{{info.pics}}" wx:key="unique">
-                <view class="dot{{index == swiperCurrent ? ' active' : ''}}"></view>
+                <view class="dot{{index == swiperCurrent ? 'active' : ''}}"></view>
             </block>
         </view>
    </view>
