@@ -20,22 +20,14 @@ Page({
         shopCarNum: 4,
         commentCount:2
     },
-    onLoad: function () {
+    onLoad: function (e) {
         var that = this;
 
         that.setData({
-            "info": {
-                "id": 1,
-                "name": "小鸡炖蘑菇",
-                "summary": '<p>多色可选的马甲</p><p><img src="http://www.timeface.cn/uploads/times/2015/07/071031_f5Viwp.jpg"/></p><p><br/>相当好吃了</p>',
-                "total_count": 2,
-                "comment_count": 2,
-                "stock": 2,
-                "price": "80.00",
-                "main_image": "/images/food.jpg",
-                "pics": [ '/images/food.jpg','/images/food.jpg' ]
-            },
-            buyNumMax:2,
+            id: e.id
+        })
+
+        that.setData({
             commentList: [
                 {
                     "score": "好评",
@@ -58,7 +50,7 @@ Page({
             ]
         });
 
-        WxParse.wxParse('article', 'html', that.data.info.summary, that, 5);
+        that.getInfo();
     },
     goShopCar: function () {
         wx.reLaunch({
@@ -126,5 +118,32 @@ Page({
         this.setData({
             swiperCurrent: e.detail.current
         })
+    },
+    getInfo: function () {
+        var that = this;
+        wx.request({
+            url:app.buildUrl('/food/info'),
+            header:app.getRequestHeader(),
+            data:{
+               id:that.data.id
+            },
+            success(res) {
+                var resp = res.data;
+                if (resp.code != 200){
+                    app.alert({'content': resp.msg});
+                    wx.navigateTo({
+                        url: '/pages/food/index'
+                    });
+                    return;
+                }
+                 that.setData({
+                     info: resp.data.info,
+                     buyNumMax: resp.data.info.stock,
+                     // shopCarNum:resp.data.cart_number
+                });
+                WxParse.wxParse('article', 'html', resp.data.info.summary, that, 5);
+            }
+        });
+
     }
 });
