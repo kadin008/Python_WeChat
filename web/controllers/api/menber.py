@@ -6,7 +6,7 @@ Create time: 2020-04-09
 IDE: PyCharm
 Introduction: 
 """
-from application import db
+from application import db, app
 from flask import request, jsonify, g
 from web.controllers.api import route_api
 from common.models.member.member import Member
@@ -101,6 +101,7 @@ def checkRge():
 
 @route_api.route('/member/share',  methods=['POST'])
 def memberShare():
+    app.logger.info("进来了")
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
     url = req['url'] if 'rul' in req else ''
@@ -112,5 +113,6 @@ def memberShare():
     model_share.created_time = getCurrentDate()
     db.session.add(model_share)
     db.session.commit()
+    app.logger.info("进来了 %s" % jsonify(resp))
     return jsonify(resp)
 
