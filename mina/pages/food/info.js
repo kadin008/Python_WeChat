@@ -2,6 +2,7 @@
 //获取应用实例
 var app = getApp();
 var WxParse = require('../../wxParse/wxParse.js');
+var utils = require('../../utils/util.js');
 
 Page({
     data: {
@@ -49,8 +50,9 @@ Page({
                 }
             ]
         });
-
-        that.getInfo();
+    },
+    onShow: function(){
+        this.getInfo();
     },
     goShopCar: function () {
         wx.reLaunch({
@@ -140,6 +142,29 @@ Page({
                 WxParse.wxParse('article', 'html', resp.data.info.summary, that, 5);
             }
         });
+    },
+    onShareAppMessage: function () {
+        var that = this;
+        return{
+            title: that.data.info.name,
+            path: 'page/food/info?id=' + that.data.info.id
+            success: function (res) {
+                // 转发成功
+                wx.request({
+                    url: app.buildUrl('/member/share'),
+                    header: app.getRequestHeader(),
+                    method: 'POST',
+                    data: {
+                        url: utils.getCurrentPageUrlWithArgs()
+                    },
+                    success: function(rse) {
 
+                    }
+                });
+            },
+            fail: function (res) {
+                // 转发失败
+            }
+        }
     }
 });

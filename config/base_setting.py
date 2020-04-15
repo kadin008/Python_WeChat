@@ -13,12 +13,17 @@ AUTH_COOKIE_NAME = 'mooc_food'
 
 IGNORE_UERL = [
     '^/user/login',
-    '^/api'
 ]
+
 IGNORE_CHECK_LOGIN_URLS = [
     '^/static',
     '^/favicon.ico'
 ]
+
+API_IGNORE_UERL = [
+    '^/api'
+]
+
 PAGE_SIZE = 50
 PAGE_DISPLAY = 10
 
@@ -26,7 +31,6 @@ STATUS_MAPPING = {
     '1': '正常',
     '0': '已删除'
 }
-
 
 MINA_APP = {
     'appid': 'wx24caabd564709caa',

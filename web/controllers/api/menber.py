@@ -7,10 +7,11 @@ IDE: PyCharm
 Introduction: 
 """
 from application import db
-from flask import request, jsonify
+from flask import request, jsonify, g
 from web.controllers.api import route_api
 from common.models.member.member import Member
 from common.models.member.oauth_member_bind import OauthMemberBind
+from common.models.food.wx_share_history import WxShareHistory
 from common.libs.helper import getCurrentDate
 from common.libs.member.MemberService import MemberService
 
@@ -95,5 +96,21 @@ def checkRge():
 
     token = '%s#%s' % (MemberService.geneAuthCode(member_info), member_info.id)
     resp['data'] = {'token': token}
+    return jsonify(resp)
+
+
+@route_api.route('/member/share',  methods=['POST'])
+def memberShare():
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
+    req = request.values
+    url = req['url'] if 'rul' req else ''
+    member_info = g.member_info
+    model_share = WxShareHistory()
+    if member_info:
+        model_share.member_id = member_info.id
+    model_share.share_url = url
+    model_share.created_time = getCurrentDate()
+    db.session.add(member_info)
+    db.session.commit()
     return jsonify(resp)
 
