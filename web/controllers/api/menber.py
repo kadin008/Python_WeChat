@@ -103,7 +103,7 @@ def checkRge():
 def memberShare():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
-    url = req['url'] if 'rul' req else ''
+    url = req['url'] if 'rul' in req else ''
     member_info = g.member_info
     model_share = WxShareHistory()
     if member_info:
