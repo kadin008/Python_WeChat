@@ -110,7 +110,7 @@ def memberShare():
         model_share.member_id = member_info.id
     model_share.share_url = url
     model_share.created_time = getCurrentDate()
-    db.session.add(member_info)
+    db.session.add(model_share)
     db.session.commit()
     return jsonify(resp)
 

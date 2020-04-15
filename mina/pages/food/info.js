@@ -147,7 +147,7 @@ Page({
         var that = this;
         return{
             title: that.data.info.name,
-            path: 'page/food/info?id=' + that.data.info.id
+            path: 'page/food/info?id=' + that.data.info.id,
             success: function (res) {
                 // 转发成功
                 wx.request({
