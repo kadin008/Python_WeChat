@@ -101,7 +101,6 @@ def checkRge():
 
 @route_api.route('/member/share',  methods=['POST'])
 def memberShare():
-    app.logger.info("进来了")
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
     url = req['url'] if 'rul' in req else ''
@@ -113,6 +112,5 @@ def memberShare():
     model_share.created_time = getCurrentDate()
     db.session.add(model_share)
     db.session.commit()
-    app.logger.info("进来了 %s" % jsonify(resp))
     return jsonify(resp)
 

@@ -45,9 +45,6 @@ UPLOAD = {
 }
 
 
-APP = {
-    # 'domain': 'http://192.168.2.99:8090'
-    'domain': 'http://wx.aipic.net.cn:8090'
-}
+
 
 

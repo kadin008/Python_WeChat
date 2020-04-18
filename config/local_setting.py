@@ -17,3 +17,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql://' + db_username + ':' + db_password + "@" + d
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ENCODING = 'utf8mb4'
 
+APP = {
+    'domain': 'http://192.168.2.99:8090'
+    # 'domain': 'http://wx.aipic.net.cn:8090'
+}

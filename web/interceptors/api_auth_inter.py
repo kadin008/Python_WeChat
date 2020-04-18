@@ -8,11 +8,10 @@ Introduction:
 """
 import re
 from application import app
-from flask import request, redirect, g, jsonify
+from flask import request, g, jsonify
 from common.models.member.member import Member
 from common.libs.member.MemberService import MemberService
-from common.libs.UrlManager import UrlManager
-from common.libs.LogService import LoginService
+
 
 
 @app.before_request
