@@ -6,14 +6,12 @@ Create time: 2020-04-13
 IDE: PyCharm
 Introduction: 
 """
-from application import db
-from flask import request, jsonify
+from flask import request, jsonify, g
 from sqlalchemy import or_
 from web.controllers.api import route_api
 from common.models.food.food import Food
 from common.models.food.food_cat import FoodCat
-from common.libs.helper import getCurrentDate
-from common.libs.member.MemberService import MemberService
+from common.models.member.member_cart import MemberCart
 from common.libs.UrlManager import UrlManager
 
 
@@ -99,6 +97,11 @@ def FoodInfo():
         resp['msg'] = '已下架'
         return jsonify(resp)
 
+    member_info = g.member_info
+    cart_number = 0
+    if member_info:
+        cart_number = MemberCart.query.filter_by(member_id=member_info.id).count()
+
     resp['data']['info'] = {
         'id': food_info.id,
         'name': food_info.name,
@@ -110,5 +113,6 @@ def FoodInfo():
         'main_image': UrlManager.buildImageUrl(food_info.main_image),
         'pics': [UrlManager.buildImageUrl(food_info.main_image), UrlManager.buildImageUrl(food_info.main_image)]
     }
+    resp['data']['cart_number'] = cart_number
     return jsonify(resp)
 

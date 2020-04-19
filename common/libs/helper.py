@@ -86,6 +86,16 @@ def getDicFilterField(db_model, select_filed, key_field, id_list):
     return ret
 
 
+def selectFilterObj(obj, field):
+    ret = []
+    for item in obj:
+        if not hasattr(item, field):
+            continue
+        if getattr(item, field) in ret:
+            continue
+        ret.append(getattr(item, field))
+    return ret
+
 
 
 

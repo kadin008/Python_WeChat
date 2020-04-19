@@ -72,11 +72,39 @@ Page({
         this.bindGuiGeTap();
     },
     addShopCar: function () {
+        var that = this;
+        var data = {
+            'id': this.data.info.id,
+            'number': this.data.buyNumber
+        };
+        wx.request({
+            url:app.buildUrl('/cart/set'),
+            header:app.getRequestHeader(),
+            method: 'POST',
+            data: data,
+            success:function (res){
+                var resp = res.data;
+                app.alert({'content': resp.msg });
+                that.setData({
+                    hideShopPopup:true
+                });
+            }
+        });
 
     },
     buyNow: function () {
+        var data = {
+            good:[{
+                'id': this.data.info.id,
+                'price': this.data.info.price,
+                'number': this.data.buyNumber
+            }]
+        };
+        this.setData({
+            hideShopPopup: true
+        });
         wx.navigateTo({
-            url: "/pages/order/index"
+            url: "/pages/order/index?data=" + JSON.stringify(data)
         });
     },
     /**
@@ -138,6 +166,7 @@ Page({
                  that.setData({
                      info: resp.data.info,
                      buyNumMax: resp.data.info.stock,
+                     shopCarNum: resp.data.cart_number,
                 });
                 WxParse.wxParse('article', 'html', resp.data.info.summary, that, 5);
             }
