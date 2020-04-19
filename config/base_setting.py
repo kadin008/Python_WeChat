@@ -11,7 +11,7 @@ DEBUG = False
 SQLALCHEMY_ECHO = False
 AUTH_COOKIE_NAME = 'mooc_food'
 
-IGNORE_UERL = [
+IGNORE_URLS = [
     '^/user/login',
 ]
 
@@ -20,7 +20,7 @@ IGNORE_CHECK_LOGIN_URLS = [
     '^/favicon.ico'
 ]
 
-API_IGNORE_UERL = [
+API_IGNORE_URLS = [
     '^/api'
 ]
 

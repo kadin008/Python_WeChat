@@ -17,7 +17,8 @@ from common.libs.LogService import LoginService
 
 @app.before_request
 def before_request():
-    ignore_urls = app.config['IGNORE_UERL']
+
+    ignore_urls = app.config['IGNORE_URLS']
     ignore_check_login_urls = app.config['IGNORE_CHECK_LOGIN_URLS']
     path = request.path
 

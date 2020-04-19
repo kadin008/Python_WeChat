@@ -7,22 +7,24 @@ IDE: PyCharm
 Introduction: 
 """
 import re
+
 from application import app
+
 from flask import request, g, jsonify
+
 from common.models.member.member import Member
 from common.libs.member.MemberService import MemberService
 
 
-
 @app.before_request
-def before_member_request():
-    api_ignore_urls = app.config['API_IGNORE_UERL']
+def before_request_api():
+    api_ignore_urls = app.config['API_IGNORE_URLS']
+
     path = request.path
-    if '/aip' not in path:
+    if '/api' not in path:
         return
 
     member_info = check_member_login()
-
     g.member_info = None
     if member_info:
         g.member_info = member_info
@@ -39,8 +41,8 @@ def before_member_request():
 
 
 def check_member_login():
-
     api_auth_cookie = request.headers.get('Authorization')
+
     if api_auth_cookie is None:
         return False
 

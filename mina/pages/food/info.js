@@ -145,53 +145,23 @@ Page({
     },
     onShareAppMessage: function () {
         var that = this;
-        return {
-          title: that.data.info.name,
-          path: 'page/food/info?id=' + that.data.info.id,
-          success:function (res) {
-              app.alert('这里面是什么：'),
-             // 转发成功
-              wx.request({
-                  url: app.buildUrl('/member/share'),
-                  header: app.getRequestHeader(),
-                  method: 'POST',
-                  data: {
-                        url: utils.getCurrentPageUrlWithArgs()
-                  },
-                  success: function(rse) {
-
-                  }
-              });
+        wx.request({
+          url: app.buildUrl('/member/share'),
+          header: app.getRequestHeader(),
+          method: 'POST',
+          data: {
+                url: utils.getCurrentPageUrlWithArgs()
           },
-          fail: function (res) {
-              // 转发失败
+          success: function(res) {
+              var resp = res.data;
+              if (resp.code == 200){
+                  return {
+                  title: that.data.info.name,
+                  path: 'page/food/info?id=' + that.data.info.id,
+                }
+              }
+
           }
-        }
+        });
     }
-    // onShareAppMessage: function () {
-    //     var that = this;
-    //     return{
-    //         title: that.data.info.name,
-    //         path: 'page/food/info?id=' + that.data.info.id,
-    //         app.alert({'content':'进来了'});
-    //         success: function (res) {
-    //             app.alert({'content':'进来了'});
-    //             // 转发成功
-    //             wx.request({
-    //                 url: app.buildUrl('/member/share'),
-    //                 header: app.getRequestHeader(),
-    //                 method: 'POST',
-    //                 data: {
-    //                     url: utils.getCurrentPageUrlWithArgs()
-    //                 },
-    //                 success: function(rse) {
-    //
-    //                 }
-    //             });
-    //         },
-    //         fail: function (res) {
-    //             // 转发失败
-    //         }
-    //     }
-    // }
 });
