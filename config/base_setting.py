@@ -43,7 +43,10 @@ PAY_STATUS_DISPLAY_MAPPING = {
 
 MINA_APP = {
     'appid': 'wx24caabd564709caa',
-    'appkey': '1420972ba3964031f59a646dd8b77eba'
+    'appkey': '1420972ba3964031f59a646dd8b77eba',
+    'paykey': '',
+    'mch_id': '',
+    'callback_url': '/api/order/callback'
 }
 
 
