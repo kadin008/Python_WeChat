@@ -32,6 +32,15 @@ STATUS_MAPPING = {
     '0': '已删除'
 }
 
+PAY_STATUS_DISPLAY_MAPPING = {
+    "0": "订单关闭",
+    "1": "支付成功",
+    "-8": "待支付",
+    "-7": "待发货",
+    "-6": "待确认",
+    "-5": "待评价"
+}
+
 MINA_APP = {
     'appid': 'wx24caabd564709caa',
     'appkey': '1420972ba3964031f59a646dd8b77eba'
