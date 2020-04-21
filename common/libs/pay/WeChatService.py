@@ -6,9 +6,11 @@ Create time: 2020-04-20
 IDE: PyCharm
 Introduction: 
 """
-import hashlib, requests, uuid
+import hashlib, requests, uuid, json, datetime
 import xml.etree.ElementTree as ET
-from application import app
+from application import app, db
+from common.models.pay.oauth_access_token import OauthAccessToken
+from common.libs.helper import getCurrentDate
 
 
 class WeChatSefvice(object):
@@ -26,12 +28,10 @@ class WeChatSefvice(object):
         pay_data['sign'] = sign
         xml_data = self.dict_to_xml(pay_data)
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-        headers = {
-            'Content-Type': 'application/xml'
-        }
+        headers = {'Content-Type': 'application/xml'}
         r = requests.post(url=url, data=xml_data.encode('utf-8'), headers=headers)
         r.encoding = 'utf-8'
-        app.logger.info( r.text)
+        app.logger.info(r.text)
         if r.status_code == 200:
             prepay_id = self.xml_to_dict(r.text).get('prepay_id')
             pay_sign_data = {
@@ -68,8 +68,33 @@ class WeChatSefvice(object):
     def get_nonce_str(self):
         return str(uuid.uuid4()).replace('-', '')
 
+    def getAccessToken(self):
+        token = None
 
+        token_info = OauthAccessToken.query.filter(OauthAccessToken.expired_time>=getCurrentDate()).first()
+        if token_info:
+            token = token_info.access_token
+            return token
 
+        config_mina = app.config['MINA_APP']
+        url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}'\
+            .format(config_mina['app_id'], config_mina['app_key'])
+
+        r = requests.get(url=url)
+        if r.status_code != 200 or not r.text:
+            return token
+
+        data = json.loads(r.text)
+        now = datetime.datetime.now()
+        date = now + datetime.timedelta(seconds=data['expires_in'] - 200)
+        model_token = OauthAccessToken()
+        model_token.access_token = data['access_token']
+        model_token.expired_time = date.strftime('%Y-%m-%d %H:%M:%S')
+        model_token.created_time = getCurrentDate()
+        db.session.add(model_token)
+        db.session.commit()
+
+        return data['access_token']
 
 
 

@@ -17,6 +17,7 @@ from common.libs.UrlManager import UrlManager
 from common.libs.pay.PayService import PayService
 from common.libs.member.CartService import CartService
 from common.libs.pay.WeChatService import WeChatSefvice
+from common.libs.helper import getCurrentDate
 
 
 @route_api.route('/order/info', methods=['POST'])
@@ -112,9 +113,9 @@ def orderPay():
 
     config_mina = app.config['MINA_APP']
     notify_url = app.config['APP']['domain'] + config_mina['callback_url']
-    target_wechat = WeChatSefvice(merchant_key=config_mina['paykey'])
+    target_wechat = WeChatSefvice(merchant_key=config_mina['pay_key'])
     data = {
-        'appid': config_mina['appid'],
+        'appid': config_mina['app_id'],
         'mch_id': config_mina['mch_id'],
         'nonce_srt': target_wechat.get_nonce_str(),
         'body': '订餐',
@@ -134,4 +135,69 @@ def orderPay():
     resp['data']['pay_info'] = pay_info
 
     return jsonify(resp)
+
+
+@route_api.route('/order/callback', methods=['POST'])
+def orderCallback():
+    result_data = {
+        'return_code': 'SUCCESS',
+        'return_msg': 'OK'
+    }
+
+    header = {'Content-Type': 'application/xml'}
+
+    config_mina = app.config['MINA_APP']
+    target_weChat = WeChatSefvice(merchant_key=config_mina['paykey'])
+    callback_data = target_weChat.xml_to_dict(request.data)
+    app.logger.info(callback_data)
+    sign = callback_data['sign']
+    callback_data.pop('sign')
+    gene_sign = target_weChat.create_sign(callback_data)
+    app.logger.info(gene_sign)
+    if sign != gene_sign:
+        result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+        return target_weChat.dict_to_xml(result_data), header
+
+    order_sn = callback_data['out_trade_no']
+    pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
+    if not pay_order_info:
+        result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+        return target_weChat.dict_to_xml(result_data), header
+
+    if int(pay_order_info.total_price * 100) != int(callback_data['total_fee']):
+        result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+        return target_weChat.dict_to_xml(result_data), header
+
+    if pay_order_info.status == 1:
+        return target_weChat.dict_to_xml(result_data), header
+    target_pay = PayService()
+    target_pay.orderSuccess(pay_order_id=pay_order_info.id, params={'pay_sn': callback_data['transaction_id']})
+    target_pay.addPayCallbackData(pay_order_id=pay_order_info.id, data=request.data)
+    return target_weChat.dict_to_xml(result_data), header
+
+
+@route_api.route('/order/ops')
+def orderOps():
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
+    req = request.values
+    member_info = g.member_info
+    order_sn = req['order_sn'] if 'order_sn' in req else ''
+    act = req['act'] if 'act' in req else ''
+
+    pay_order_info = PayOrder.query.filter_by(order_sn=order_sn, member_id=member_info.id).first()
+    if not pay_order_info:
+        resp['code'] = -1
+        resp['msg'] = '系统繁忙，请稍后再试'
+        return jsonify(resp)
+
+    if act == 'cancel':
+        pass
+    elif act == 'confirm':
+        pay_order_info.express_status = 1
+        pay_order_info.updated_time = getCurrentDate()
+        db.session.add(pay_order_info)
+        db.session.commit()
+    return jsonify(resp)
+
+
 

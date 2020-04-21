@@ -119,5 +119,39 @@ Page({
 
             }
         });
+    },
+    orderCancel: function (e) {
+        this.orderOps(e.currentTarget.dataset.id, 'cancel', '确认取消订单吗？');
+    },
+    orderConfirm: function (e) {
+        this.orderOps(e.currentTarget.dataset.id, 'confirm', '确认已收货？');
+    },
+    orderOps: function (order_sn, act, msg) {
+        var that = this;
+        var params = {
+            'cancel': msg,
+            'cb_comfirm': function () {
+                wx.request({
+                    url: app.buildUrl('/order/ops'),
+                    header: app.getRequestHeader(),
+                    method: 'POST',
+                    data: {
+                        order_sn: order_sn,
+                        act: act
+                    },
+                    success: function (res) {
+                        var resp = res.data;
+                        app.alert({'content': resp.msg});
+                        if (resp.code == 200){
+                            that.getPayOrder();
+                            return;
+                        }
+
+                    }
+                });
+
+            }
+        };
+        app.tip(params);
     }
 });
