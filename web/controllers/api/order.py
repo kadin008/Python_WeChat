@@ -13,6 +13,7 @@ from flask import request, jsonify, g
 from common.models.food.food import Food
 from common.models.pay.pay_order import PayOrder
 from common.models.member.oauth_member_bind import OauthMemberBind
+from common.models.member.member_address import MemberAddress
 from common.libs.UrlManager import UrlManager
 from common.libs.pay.PayService import PayService
 from common.libs.member.CartService import CartService
@@ -50,12 +51,20 @@ def orderInfo():
             }
             pay_price = pay_price + item.price * int(food_dic[item.id])
             data_food_list.append(tmp_data)
-
-    default_address = {
-        'name': "编程浪子",
-        'mobile': "12345678901",
-        'address': "上海市浦东新区XX",
-    }
+    address_info = MemberAddress.query.filter_by(status=1, is_default=1, member_id=member_info.id).first()
+    default_address = ''
+    if address_info:
+        default_address = {
+            'id': address_info.id,
+            'name': address_info.nickname,
+            'mobile': address_info.mobile,
+            'address': '%s %s %s %s' % (
+                address_info.province_str,
+                address_info.city_str,
+                address_info.area_str,
+                address_info.address
+            )
+        }
 
     resp['data']['food_list'] = data_food_list
     resp['data']['pay_price'] = str(pay_price)
@@ -71,7 +80,9 @@ def orderCreate():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
     type = req['type'] if 'type' in req else None
+    express_address_id = int(req['express_address_id']) if ('express_address_id' in req and req['express_address_id']) else 0
     params_goods = req['goods'] if 'goods' in req else None
+
 
     items = []
     if params_goods:
@@ -82,9 +93,29 @@ def orderCreate():
         resp['msg'] = '请选择商品'
         return jsonify(resp)
 
+    address_info = MemberAddress.query.filter_by(id=express_address_id).first()
+    default_address = ''
+    if not address_info or not address_info.status:
+        resp['code'] = -1
+        resp['msg'] = '请选择收件地址'
+        return jsonify(resp)
+
+
     member_info = g.member_info
     target = PayService()
-    params = {}
+    params = {
+        'express_address_id': address_info.id,
+        'express_info': {
+            'name': address_info.nickname,
+            'mobile': address_info.mobile,
+            'address': '%s %s %s %s' % (
+                address_info.province_str,
+                address_info.city_str,
+                address_info.area_str,
+                address_info.address
+            )
+        }
+    }
     resp = target.createOrder(member_info.id, items, params)
 
     if resp['code'] == 200 and type == 'cart':
@@ -127,8 +158,14 @@ def orderPay():
     }
 
     pay_info = target_wechat.get_pay_info(data)
-    pay_order_info.prepay_id = pay_info['prepay_id']
 
+    # 保存prepay_id为了后面发模板消息
+    # pay_order_info.prepay_id = pay_info['prepay_id']
+    '''
+    如果对接了订阅消息，这个prepay_id 就没有用了
+    为了节省一个字段，就用这个自动存放 能不能发送吧
+    '''
+    pay_order_info.prepay_id = req['can_send'] if 'can_send' in req else 0
     db.session.add(pay_order_info)
     db.session.commit()
 
@@ -176,7 +213,7 @@ def orderCallback():
     return target_weChat.dict_to_xml(result_data), header
 
 
-@route_api.route('/order/ops')
+@route_api.route('/order/ops', methods=['POST'])
 def orderOps():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
@@ -191,7 +228,12 @@ def orderOps():
         return jsonify(resp)
 
     if act == 'cancel':
-        pass
+        target_pay = PayService()
+        ret = target_pay.closeOrder(pay_order_id=pay_order_info.id)
+        if not ret:
+            resp['code'] = -1
+            resp['msg'] = '系统繁忙，请稍后再试'
+            return jsonify(resp)
     elif act == 'confirm':
         pay_order_info.express_status = 1
         pay_order_info.updated_time = getCurrentDate()
@@ -200,4 +242,16 @@ def orderOps():
     return jsonify(resp)
 
 
+# web模拟回调方法
+# 其实所有回调基本都是校验合法性 然后找到订单id，所以我们模拟就是直接传递 订单id
+@route_api.route('/order/callback2', methods=['POST'])
+def orderCallbackTwo():
+    req = request.values
+    id = int(req['id']) if 'id' in req else 0
+    if not id:
+        return 'fail'
+
+    target_pay = PayService()
+    target_pay.orderSuccess(pay_order_id=id, params={'pay_sn': ' '})
+    return 'success'
 

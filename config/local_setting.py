@@ -19,6 +19,12 @@ SQLALCHEMY_ENCODING = 'utf8mb4'
 
 APP = {
     'domain': 'http://192.168.2.99:8090'
-    # 'domain': 'http://wx.aipic.net.cn:8090'
 }
 
+MINA_APP = {
+    'app_id': 'wx24caabd564709caa',
+    'app_key': '1420972ba3964031f59a646dd8b77eba',
+    'pay_key': '',
+    'mch_id': '',
+    'callback_url': '/api/order/callback2'
+}

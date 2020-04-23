@@ -41,15 +41,6 @@ PAY_STATUS_DISPLAY_MAPPING = {
     "-5": "待评价"
 }
 
-MINA_APP = {
-    'app_id': 'wx24caabd564709caa',
-    'app_key': '1420972ba3964031f59a646dd8b77eba',
-    'pay_key': '',
-    'mch_id': '',
-    'callback_url': '/api/order/callback'
-}
-
-
 UPLOAD = {
     'ext': ['jpg', 'gif', 'bmp', 'jpeg', 'png'],
     'prefix_path': '/web/static/upload/',

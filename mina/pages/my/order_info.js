@@ -3,6 +3,9 @@ Page({
     data: {},
     onLoad: function (e) {
         var that = this;
+        that.setData({
+            order_sn: e.order_sn
+        });
     },
     onShow: function () {
         var that = this;
@@ -36,5 +39,29 @@ Page({
                 ]
             }
         });
+        that.getPayOrderInof();
+    },
+    getPayOrderInof: function(){
+        var that = this;
+        wx.request({
+          url: app.buildUrl('/my/order/info'),
+          header: app.getRequestHeader(),
+          method: 'POST',
+          data:{
+              order_sn: that.data.order_sn
+          },
+          success: function(res){
+            var resp = res.data;
+            if (resp.code != 200){
+                app.alert({'content': resp.msg});
+                return;
+            }
+            that.setData({
+                info: resp.data.info
+            });
+
+          }
+        });
+
     }
 });

@@ -6,7 +6,7 @@ Create time: 2020-04-20
 IDE: PyCharm
 Introduction: 
 """
-import decimal, hashlib, time, random
+import decimal, hashlib, time, random, json
 from application import app, db
 from common.models.food.food import Food
 from common.models.food.food_sale_change_log import FoodSaleChangeLog
@@ -42,6 +42,8 @@ class PayService(object):
 
         yun_price = params['yun_price'] if params and 'yun_price' in params else 0
         note = params['note'] if params and 'note' in params else ''
+        express_address_id = params['express_address_id'] if params and 'express_address_id' in params else 0
+        express_info = params['express_info'] if params and 'express_info' in params else {}
 
         yun_price = decimal.Decimal(yun_price)
         total_price = pay_price + yun_price
@@ -60,6 +62,8 @@ class PayService(object):
             model_pay_order.yun_price = yun_price
             model_pay_order.pay_price = pay_price
             model_pay_order.note = note
+            model_pay_order.express_address_id = express_address_id
+            model_pay_order.express_info = json.dumps(express_info)
             model_pay_order.status = -8
             model_pay_order.express_status = -8
             model_pay_order.updated_time = model_pay_order.created_time = getCurrentDate()
@@ -106,6 +110,29 @@ class PayService(object):
             return resp
 
         return resp
+
+    def closeOrder(self, pay_order_id=0):
+        if pay_order_id < 1:
+            return False
+        pay_order_info = PayOrder.query.filter_by(id=pay_order_id, status=-8).first()
+        if not pay_order_info:
+            return False
+        pay_order_item = PayOrderItem.query.filter_by(pay_order_id=pay_order_id).all()
+        if pay_order_item:
+            for item in pay_order_item:
+                tmp_food_info = Food.query.filter_by(di=item.food_id).first()
+                if tmp_food_info:
+                    tmp_food_info.stock = tmp_food_info.stock + item.quantity
+                    tmp_food_info.updated_time = getCurrentDate()
+                    db.session.add(tmp_food_info)
+                    db.session.commit()
+
+                    FoodService.setStockChangeLog(item.food_id, item.quantity, '订单取消')
+        pay_order_info.status = 0
+        pay_order_info.updated_time = getCurrentDate()
+        db.session.add(pay_order_info)
+        db.session.commit()
+        return True
 
     def geneOrderSn(self):
         m = hashlib.md5()

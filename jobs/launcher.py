@@ -11,6 +11,7 @@ import argparse, sys, traceback
 from flask_script import Command, Option
 
 
+
 """
 python manage.py runjob -m Test  (  jobs/tasks/Test.py )
 python manage.py runjob -m test/Index (  jobs/tasks/test/Index.py )
@@ -48,7 +49,7 @@ class runJob(Command):
             return self.tips()
         module_name = ret_params['name'].replace('/', '.')
         try:
-            import_string = 'from jobs.tasks.%s import JObTask as job_target' % ( module_name )
+            import_string = 'from jobs.tasks.%s import JobTask as job_target' % module_name
             exec(import_string, globals())
             target = job_target()
             target.run(ret_params)

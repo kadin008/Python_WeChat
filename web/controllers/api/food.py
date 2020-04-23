@@ -11,8 +11,11 @@ from sqlalchemy import or_
 from web.controllers.api import route_api
 from common.models.food.food import Food
 from common.models.food.food_cat import FoodCat
+from common.models.member.member import Member
 from common.models.member.member_cart import MemberCart
+from common.models.member.member_comments import MemberComment
 from common.libs.UrlManager import UrlManager
+from common.libs.helper import getDicFilterField, selectFilterObj
 
 
 @route_api.route('/food/index')
@@ -115,4 +118,40 @@ def FoodInfo():
     }
     resp['data']['cart_number'] = cart_number
     return jsonify(resp)
+
+
+@route_api.route('/food/comment', methods=['POST'])
+def FoodComments():
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
+    req = request.values
+    id = int(req['id']) if 'id' in req else 0
+
+    query = MemberComment.query.filter(MemberComment.food_ids.ilike(',{0},'.format(id)))
+    List = query.order_by(MemberComment.id.desc()).limit(5).all()
+    data_list = []
+    if List:
+        member_map = getDicFilterField(Member, Member.id, 'id', selectFilterObj(List, 'member_id'))
+        for item in List:
+            if item.member_id not in member_map:
+                continue
+            tmp_member_info = member_map[item.member_id]
+            tmp_data = {
+                'score': item.score_desc,
+                'date': item.created_time.strftime('%Y-%m-%d %H:%M:%S'),
+                'content': item.content,
+                'user': {
+                    'nickname': tmp_member_info.nickname,
+                    'avatar_url': tmp_member_info.avatar
+                }
+            }
+            data_list.append(tmp_data)
+    resp['data']['list'] = data_list
+    resp['data']['count'] = query.count()
+
+    return jsonify(resp)
+
+
+
+
+
 

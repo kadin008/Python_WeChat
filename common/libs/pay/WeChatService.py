@@ -71,7 +71,7 @@ class WeChatSefvice(object):
     def getAccessToken(self):
         token = None
 
-        token_info = OauthAccessToken.query.filter(OauthAccessToken.expired_time>=getCurrentDate()).first()
+        token_info = OauthAccessToken.query.filter(OauthAccessToken.expired_time >= getCurrentDate()).first()
         if token_info:
             token = token_info.access_token
             return token

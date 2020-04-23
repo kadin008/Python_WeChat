@@ -53,6 +53,7 @@ Page({
     },
     onShow: function(){
         this.getInfo();
+        this.getComments();
     },
     goShopCar: function () {
         wx.reLaunch({
@@ -172,6 +173,30 @@ Page({
             }
         });
     },
+    getComments: function(){
+        var that = this;
+        wx.request({
+            url: app.buildUrl('/food/comment'),
+            header: app.getRequestHeader(),
+            method: 'POST',
+            data: {
+                   id: that.data.id
+            },
+            success: function(res) {
+                var resp = res.data;
+                if (resp.code != 200){
+                    app.alert({'content': resp.msg});
+                    return;
+                }
+
+                that.setData({
+                    commentList: resp.data.list,
+                    commentCount: resp.data.count,
+                });
+
+            }
+        });
+    },
     onShareAppMessage: function () {
         var that = this;
         wx.request({
@@ -189,7 +214,6 @@ Page({
                   path: 'page/food/info?id=' + that.data.info.id,
                 }
               }
-
           }
         });
     }

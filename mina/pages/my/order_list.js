@@ -16,7 +16,7 @@ Page({
     },
     orderDetail: function (e) {
         wx.navigateTo({
-            url: "/pages/my/order_info"
+            url: "/pages/my/order_info?order_sn=" + e.currentTarget.dataset.id
         })
     },
     onLoad: function (options) {
@@ -28,26 +28,6 @@ Page({
     },
     onShow: function () {
         var that = this;
-        // that.setData({
-        //     order_list: [
-        //         {
-		// 			status: -8,
-        //             status_desc: "待支付",
-        //             date: "2018-07-01 22:30:23",
-        //             order_number: "20180701223023001",
-        //             note: "记得周六发货",
-        //             total_price: "85.00",
-        //             goods_list: [
-        //                 {
-        //                     pic_url: "/images/food.jpg"
-        //                 },
-        //                 {
-        //                     pic_url: "/images/food.jpg"
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // });
         that.getPayOrder();
     },
     onHide: function () {
@@ -89,34 +69,26 @@ Page({
     },
     toPay:function (e) {
         var that = this;
-        wx.request({
-            url: app.buildUrl('/order/pay'),
-            header: app.getRequestHeader(),
-            method: 'POST',
-            data: {
-                order_sn: e.currentTarget.dataset.id
-            },
+        //这里增加获取用户订阅消息权限，需要将申请的模板id填写进来
+        var template_ids = [''];
+        var can_send = 0
+        var data = {
+            order_sn: e.currentTarget.dataset.id,
+            can_send: can_send
+        };
+        wx.requestSubscribeMessage({
+            tmplIds: template_ids,
             success: function (res) {
-                var resp = res.data;
-                if (resp.code != 200){
-                    app.alert({'content': resp.msg});
-                    return;
-                }
-                var pay_info = resp.data.pay_info;
-                wx.requestPayment({
-                    'timeStamp':pay_info.timeStamp,
-                    'nonceStr': pay_info.nonceStr,
-                    'package': pay_info.package,
-                    'signType': 'MD5',
-                    'paySign': pay_info.paySign,
-                    'success': function (res) {
-
-                    },
-                    'fail': function (res) {
-
+                for (var tmp_id of template_ids){
+                    if (res.hasOwnProperty(tmp_id) && res[tmp_id] == 'accept'){
+                        can_send = 1;
                     }
-                });
-
+                }
+                data['can_send'] = can_send;
+                that.doPay(data);
+            },
+            fail:function (res) {
+                that.doPay(data)
             }
         });
     },
@@ -126,11 +98,16 @@ Page({
     orderConfirm: function (e) {
         this.orderOps(e.currentTarget.dataset.id, 'confirm', '确认已收货？');
     },
+    orderComment: function(e){
+        wx.navigateTo({
+          url: '/pages/my/comment?order_sn=' + e.currentTarget.dataset.id,
+        })
+    },
     orderOps: function (order_sn, act, msg) {
         var that = this;
         var params = {
-            'cancel': msg,
-            'cb_comfirm': function () {
+            'content': msg,
+            'cb_confirm': function () {
                 wx.request({
                     url: app.buildUrl('/order/ops'),
                     header: app.getRequestHeader(),
@@ -146,12 +123,37 @@ Page({
                             that.getPayOrder();
                             return;
                         }
-
                     }
                 });
-
             }
         };
         app.tip(params);
-    }
+    },
+    doPay:function (data) {
+        wx.request({
+            url: app.buildUrl('/order/pay'),
+            header: app.getRequestHeader(),
+            method: 'POST',
+            data: data,
+            success: function (res) {
+                var resp = res.data;
+                if (resp.code != 200){
+                    app.alert({'content': resp.msg});
+                    return;
+                }
+                var pay_info = resp.data.pay_info;
+                wx.requestPayment({
+                    'timeStamp':pay_info.timeStamp,
+                    'nonceStr': pay_info.nonceStr,
+                    'package': pay_info.package,
+                    'signType': 'MD5',
+                    'paySign': pay_info.paySign,
+                    'success': function (res) {
+                    },
+                    'fail': function (res) {
+                    }
+                });
+            }
+        });
+    },
 });
