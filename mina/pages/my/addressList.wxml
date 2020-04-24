@@ -13,7 +13,7 @@
         </view>
     </view>
     <view class="bottom-box">
-        <view class="add-btn" bindtap="addessSet">新增收货地址</view>
+        <view class="add-btn" bindtap="addessSet" data-id="0">新增收货地址</view>
     </view>
 
 </view>

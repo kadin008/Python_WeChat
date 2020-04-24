@@ -56,6 +56,14 @@
 					"id": -1,
 					"name": "pages/my/order_list",
 					"pathName": "pages/my/order_list",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "pages/my/index",
+					"pathName": "pages/my/index",
+					"query": "",
 					"scene": null
 				}
 			]

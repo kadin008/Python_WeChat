@@ -41,6 +41,12 @@ PAY_STATUS_DISPLAY_MAPPING = {
     "-5": "待评价"
 }
 
+PAY_STATUS_MAPPING = {
+    '1': '已支付',
+    '-8': '待支付',
+    '0': '已关闭'
+}
+
 UPLOAD = {
     'ext': ['jpg', 'gif', 'bmp', 'jpeg', 'png'],
     'prefix_path': '/web/static/upload/',

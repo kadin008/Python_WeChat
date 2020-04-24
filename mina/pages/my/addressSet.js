@@ -3,6 +3,7 @@ var commonCityData = require('../../utils/city.js');
 var app = getApp();
 Page({
     data: {
+        info: [],
         provinces: [],
         citys: [],
         districts: [],
@@ -15,7 +16,13 @@ Page({
     },
     onLoad: function (e) {
         var that = this;
+        that.setData({
+            id: e.id
+        });
         this.initCityData(1);
+    },
+    onShow:function(){
+        this.getInfo();
     },
     //初始化城市数据
     initCityData:function( level, obj ){
@@ -119,6 +126,7 @@ Page({
             header: app.getRequestHeader(),
             method: 'POST',
             data: {
+                id: that.data.id,
                 province_id: commonCityData.cityData[that.data.selProvinceIndex].id,
                 province_str: that.data.selProvince,
                 city_id: city_id,
@@ -142,5 +150,57 @@ Page({
 
     },
     deleteAddress: function (e) {
+        var that = this;
+        var params = {
+            'content': '确定要删除吗？',
+            'cb_confim': function(){
+                wx.request({
+                  url: app.buildUrl('/my/address/ops'),
+                  header: app.getRequestHeader(),
+                  method: 'POST',
+                  data: {
+                      id: that.data.id,
+                      act: 'del'
+                  },
+                  success: function(res){
+                    var resp = res.data;
+                    app.alert({'content': resp.msg});
+                    if (resp.code == 200){
+                      wx.navigateBack({
+                        complete: (res) => {},
+                      })
+                    }
+                  }
+                });
+            }
+        }
+    },
+    getInfo: function(){
+        var that = this;
+        if (that.data.id < 1){
+            return;
+        }
+        wx.request({
+          url: app.buildUrl('/my/address/info'),
+          header: app.getRequestHeader(),
+          method: 'POST',
+          data: {
+            id: that.data.id
+          },
+          success: function(res){
+            var resp = res.data;
+            if (resp.code != 200){
+              app.alert({'content': resp.msg});
+              return;
+            }
+            var info = resp.data.info;
+            that.setData({
+                inof: info,
+                selProvince: info.province_str ? info.province_str : '请选择',
+                selCity: info.city_str ? info.city_str : '请选择',
+                selDistrict: info.area_str ? info.area_str : '请选择'
+            });
+          }
+        })
     },
 });
