@@ -19,7 +19,7 @@ var mod_pwd_ops = {
                 return false;
             }
 
-            if (!new_password || email.length < 8){
+            if (!new_password || new_password.length < 8){
                 common_ops.alert('请输入不少于8位的新密码');
                 return false;
             }
