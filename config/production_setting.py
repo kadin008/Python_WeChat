@@ -6,9 +6,9 @@ Create time: 2020-04-05
 IDE: PyCharm
 Introduction: 
 """
-db_username = 'movie'
-db_password = 'A100s200'
-db_server = 'rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com'
+db_username = 'm***e'
+db_password = 'A******0'
+db_server = 'rdsv1*************ncs.com'
 db_name = 'food_vir'
 # DEBUG = True
 SQLALCHEMY_ECHO = True
@@ -23,8 +23,8 @@ APP = {
 }
 
 MINA_APP = {
-    'app_id': 'wx24caabd564709caa',
-    'app_key': '1420972ba3964031f59a646dd8b77eba',
+    'app_id': 'wx24***********09caa',
+    'app_key': '1420972***************8b77eba',
     'pay_key': '',
     'mch_id': '',
     'callback_url': '/api/order/callback'
