@@ -6,7 +6,7 @@ Create time: 2020-04-05
 IDE: PyCharm
 Introduction: 
 """
-SERVER_PORT = 8099
+SERVER_PORT = 9080
 DEBUG = False
 SQLALCHEMY_ECHO = False
 AUTH_COOKIE_NAME = 'mooc_food'

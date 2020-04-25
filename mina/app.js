@@ -7,7 +7,7 @@ App({
         version: "1.0",
         shopName: "Python3 + Flask 订餐全栈系统",
         // domain:"http://192.168.2.99:8090/api" //本地测试
-        domain:"http://wx.aipic.net.cn/api"
+        domain:"http://wx.aipic.net.cn:9080/api"
     },
     tip:function( params ){
         var that = this;

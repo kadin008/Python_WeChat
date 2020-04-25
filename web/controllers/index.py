@@ -24,7 +24,7 @@ def index():
             },
             'member': {
                 'total_new': 0,
-                'month_mew': 0,
+                'month_new': 0,
                 'total': 0
             },
             'order': {
@@ -50,7 +50,7 @@ def index():
     if List:
         for item in List:
             data['finance']['month'] += item.total_pay_money
-            data['member']['month_mew'] += item.total_new_member_count
+            data['member']['month_new'] += item.total_new_member_count
             data['member']['total'] = item.total_member_count
             data['order']['month'] += item.total_order_count
             data['shared']['month'] += item.total_shared_count
