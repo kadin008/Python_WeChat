@@ -23,7 +23,7 @@ def index():
                 'month': 0
             },
             'member': {
-                'total_new': 0,
+                'today_new': 0,
                 'month_new': 0,
                 'total': 0
             },
@@ -57,7 +57,7 @@ def index():
 
             if getFormatDate(date=item.date, format='%Y-%m-%d') == date_to:
                 data['finance']['today'] += item.total_pay_money
-                data['member']['total_new'] += item.total_new_member_count
+                data['member']['today_new'] += item.total_new_member_count
                 data['order']['today'] += item.total_order_count
                 data['shared']['today'] += item.total_shared_count
 

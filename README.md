@@ -43,6 +43,6 @@
 
 
 
-
+git clone git@github.com:kadin008/Python_WeChat.git
 
 
