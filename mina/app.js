@@ -6,8 +6,8 @@ App({
         userInfo: null,
         version: "1.0",
         shopName: "Python3 + Flask 订餐全栈系统",
-        domain:"http://192.168.2.99:8090/api" //本地测试
-        // domain:"http://wx.aipic.net.cn:8090/api"
+        // domain:"http://192.168.2.99:8090/api" //本地测试
+        domain:"http://wx.aipic.net.cn/api"
     },
     tip:function( params ){
         var that = this;

@@ -19,7 +19,7 @@ SQLALCHEMY_ENCODING = 'utf8mb4'
 RELEASE_VERSION = '20200425150459'
 
 APP = {
-    'domain': 'http://wx.aipic.net.cn:8090'
+    'domain': 'http://wx.aipic.net.cn'
 }
 
 MINA_APP = {
