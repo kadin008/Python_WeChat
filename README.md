@@ -39,10 +39,6 @@
 
 ##flask-sqlacodegen 生成models
 *  flask-sqlacodegen 'mysql://root:123456@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db' --outfile "common/models/model.py"  --flask
-*  flask-sqlacodegen "mysql://kadin208:A100s200@rdsv148e9hymz8rj85wqo.mysql.rds.aliyuncs.com/food_db" --tables member --outfile "common/models/member/member.py"  --flask
 
-
-
-git clone git@github.com:kadin008/Python_WeChat.git
 
 
